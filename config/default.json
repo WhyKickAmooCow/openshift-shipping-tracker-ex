@@ -2,7 +2,15 @@
     "server": {
         "port": 3000,
         "routes": {
-            "index": "/"
+            "index": "/",
+            "api": "/api/"
         }
+    },
+    "db":{
+        "user": "user",
+        "host": "localhost",
+        "database": "db",
+        "password": "password",
+        "port": "5432"
     }
 }

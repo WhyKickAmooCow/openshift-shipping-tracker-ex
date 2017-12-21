@@ -1,0 +1,10 @@
+DROP DATABASE IF EXISTS db;
+CREATE DATABASE db;
+
+\c db;
+
+CREATE TABLE deliveries (
+    id SERIAL PRIMARY KEY,
+    status VARCHAR NOT NULL,
+    name VARCHAR
+);

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Delivery Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<style>
+    body {
+        background-color: darkgray;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    [v-cloak] {display: none}
+
+</style>
+
+<body>
+    <div id="app" v-cloak>
+        <table>
+            <tr v-for="i in deliveries">
+               <td>{{i.status}} </div>
+               <td>{{i.status}} </div>
+               <td>{{i.status}} </div>
+               </tr>
+        </table>
+        <button @click="getDeliveries">Load more</button>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    'use strict'
+    var app = new Vue({
+        el: "#app",
+        data: {
+            // Object
+            // Properties:
+            //  status: string
+            //  name: string
+            //  id: int
+            deliveries: []
+        },
+        computed: {
+
+        },
+        watch: {
+
+        },
+        methods: {
+            getDeliveries: function() {
+              for(var i = 0; i < 10; i++){
+                  this.deliveries.push({'status': i});
+              }  
+            }
+        }
+    });
+</script>
+</html>
