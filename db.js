@@ -1,6 +1,6 @@
 const config = require('config');
 const logger = require('./logger');
-const { Client } = require('pg');
+const Client = require('pg').Client;
 
 dbConf = config.get('db');
 
@@ -12,7 +12,7 @@ const client = new Client({
     port: dbConf.get('port')
 });
 
-client.connect().catch(function(err) {
+client.connect().catch(function (err) {
     logger.error(err);
     process.abort();
 });

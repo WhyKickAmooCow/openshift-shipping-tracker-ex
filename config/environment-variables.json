@@ -2,7 +2,7 @@
     "server": {
         "port": "PORT"
     },
-    "db":{
+    "db": {
         "user": "PGUSER",
         "host": "PGHOST",
         "database": "PGDATABASE",

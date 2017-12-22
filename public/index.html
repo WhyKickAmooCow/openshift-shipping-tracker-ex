@@ -1,42 +1,99 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Delivery Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/icon-font.min.css">
 </head>
 <style>
-    body {
-        background-color: darkgray;
-    }
-
-    th, td {
+    th,
+    td {
         padding: 10px;
     }
 
-    [v-cloak] {display: none}
+    [v-cloak] {
+        display: none
+    }
 
+    span {
+        animation: spinIt 1.5s infinite linear;
+    }
+
+    @keyframes spinIt {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(359deg);
+        }
+    }
 </style>
 
 <body>
     <div id="app" v-cloak>
-        <table>
-            <tr v-for="i in deliveries">
-               <td>{{i.status}} </div>
-               <td>{{i.status}} </div>
-               <td>{{i.status}} </div>
-               </tr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td scope="col">
+                        <input type="text" placeholder="name" v-model="delivery_form.name" />
+                    </td>
+                    <td scope="col">
+                        <input type="text" placeholder="status" v-model="delivery_form.status" />
+                    </td>
+                    <td scope="col">
+                        <button @click="addDelivery">Add</button>
+                    </td scope="col">
+                </tr>
+                <tr>
+                    <td scope="col">#</td>
+                    <td scope="col">Name</td>
+                    <td scope="col">Status</td scope="col">
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr v-for="i in deliveries_pending">
+                    <th scope="row">
+                        <span :class="[i.state=='pending' ? 'spin-pending' : '', i.state=='pending' ? 'lnr-sync' : '', i.state=='failed' ? 'lnr-cross-circle' : '', 'lnr']"></span>
+                    </th>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.status }}</td>
+                </tr>
+                <tr v-for="i in deliveries">
+                    <th scope="row">{{ i.id }} </th>
+                    <td>
+                        <input type="text" v-model="i.name">
+                    </td>
+                    <td>
+                        <select v-model="i.status">
+                            <option value="In Transit">In Transit</option>
+                            <option value="Arrived">Arrived</option>
+                            <option value="Clearing Customs">Clearing Customs</option>
+                            <option value="At Warehouse">At Warehouse</option>
+                            <option value="Awaiting Shipment">Awaiting Shipment</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+
         </table>
         <button @click="getDeliveries">Load more</button>
     </div>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="/javascripts/lodash.min.js"></script>
+<script src="/javascripts/axios.min.js"></script>
+<script src="/javascripts/vue.js"></script>
 <script>
     'use strict'
+    const pageSize = 50;
+    const apiPath = "/api/deliveries";
+    const timeRemoveFail = 2000;
+
     var app = new Vue({
         el: "#app",
         data: {
@@ -45,7 +102,12 @@
             //  status: string
             //  name: string
             //  id: int
-            deliveries: []
+            deliveries: [],
+            deliveries_pending: [],
+            delivery_form: {
+                name: '',
+                status: ''
+            }
         },
         computed: {
 
@@ -54,12 +116,68 @@
 
         },
         methods: {
-            getDeliveries: function() {
-              for(var i = 0; i < 10; i++){
-                  this.deliveries.push({'status': i});
-              }  
+            getDeliveries: function () {
+                var vm = this;
+
+                if (vm.deliveries.length > 0) {
+                    axios.get(apiPath, {
+                            params: {
+                                start_id: _.last(vm.deliveries).id - 1,
+                                page_size: pageSize
+                            }
+                        })
+                        .then((res) => {
+                            vm.deliveries = _.concat(vm.deliveries, res.data);
+                        })
+                        .catch();
+                    return;
+                }
+
+                axios.get(apiPath, {
+                        params: {
+                            from_last: true,
+                            page_size: pageSize
+                        }
+                    })
+                    .then((res) => {
+                        vm.deliveries = _.concat(vm.deliveries, res.data);
+                    })
+                    .catch();
+            },
+
+            addDelivery: function () {
+                var vm = this;
+                const delivery = {
+                    name: vm.delivery_form.name,
+                    status: vm.delivery_form.status,
+                    state: "pending"
+                };
+
+                const temp_index = vm.deliveries_pending.push(delivery) - 1;
+                vm.delivery_form.name = '';
+                vm.delivery_form.status = '';
+
+                axios.post(apiPath, {
+                        status: delivery.status,
+                        name: delivery.name
+                    })
+                    .then((res) => {
+                        _.pullAt(vm.deliveries_pending, temp_index);
+                        vm.deliveries.unshift(res.data);
+                    })
+                    .catch((err) => {
+                        vm.deliveries_pending[temp_index].state = "failed";
+                        setTimeout(() => {
+
+                        }, timeRemoveFail);
+                    });
+
             }
+
         }
     });
+
+    app.getDeliveries();
 </script>
+
 </html>
