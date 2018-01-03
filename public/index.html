@@ -42,7 +42,13 @@
                         <input type="text" placeholder="name" v-model="delivery_form.name" />
                     </td>
                     <td scope="col">
-                        <input type="text" placeholder="status" v-model="delivery_form.status" />
+                        <select v-model="delivery_form.status">
+                            <option value="In Transit">In Transit</option>
+                            <option value="Arrived">Arrived</option>
+                            <option value="Clearing Customs">Clearing Customs</option>
+                            <option value="At Warehouse">At Warehouse</option>
+                            <option value="Awaiting Shipment">Awaiting Shipment</option>
+                        </select>
                     </td>
                     <td scope="col">
                         <button @click="addDelivery">Add</button>
@@ -66,16 +72,10 @@
                 <tr v-for="i in deliveries">
                     <th scope="row">{{ i.id }} </th>
                     <td>
-                        <input type="text" v-model="i.name">
+                        {{ i.name }}
                     </td>
                     <td>
-                        <select v-model="i.status">
-                            <option value="In Transit">In Transit</option>
-                            <option value="Arrived">Arrived</option>
-                            <option value="Clearing Customs">Clearing Customs</option>
-                            <option value="At Warehouse">At Warehouse</option>
-                            <option value="Awaiting Shipment">Awaiting Shipment</option>
-                        </select>
+                        {{ i.status }}
                     </td>
                 </tr>
             </tbody>

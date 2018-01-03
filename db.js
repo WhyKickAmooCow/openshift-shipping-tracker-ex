@@ -12,9 +12,27 @@ const client = new Client({
     port: dbConf.get('port')
 });
 
-client.connect().catch(function (err) {
-    logger.error(err);
-    process.abort();
-});
+async function x() {
+    try {
+        await client.connect();
+
+        logger.log("Successfully connected to database");
+
+        client.on('error', (err) => {
+            logger.error(err);
+        });
+
+        client.on('end', () => {
+            logger.error('Disconnected from database');
+            process.exit();
+        });
+    } catch (err) {
+        logger.error("Failed to connect to the database");
+        logger.error(err);
+        process.abort();
+    }
+}
+
+x();
 
 module.exports = client;

@@ -10,6 +10,7 @@ const compression = require('compression');
 const routes = require('./routes/index');
 
 const logger = require('./logger')
+const config = require('config');
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(compression());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, config.get("server.public_dir"))));
 
 app.use('/', routes);
 

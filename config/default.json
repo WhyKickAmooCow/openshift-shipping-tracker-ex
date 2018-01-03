@@ -1,6 +1,7 @@
 {
     "server": {
         "port": 3000,
+        "public_dir": "public",
         "routes": {
             "index": "/",
             "api": {

@@ -1,0 +1,17 @@
+{
+    "server": {
+        "port": "APPLICATION_PORT"
+    },
+    "db": {
+        "user": "PGUSER",
+        "host": "POSTGRESQL_SERVICE_HOST",
+        "database": "PGDATABASE",
+        "password": "PGPASSWORD",
+        "port": "POSTGRESQL_SERVICE_PORT",
+        "table": {
+            "api": {
+                "deliveries": "APPLICATION_TABLE"
+            }
+        }
+    }
+}
