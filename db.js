@@ -18,9 +18,9 @@ async function x() {
 
         logger.log("Successfully connected to database");
 
-        client.on('error', (err) => {
-            logger.error(err);
-        });
+        // client.on('error', (err) => {
+        //     logger.error(err);
+        // });
 
         client.on('end', () => {
             logger.error('Disconnected from database');

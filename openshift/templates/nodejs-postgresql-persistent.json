@@ -198,30 +198,35 @@
                                 }
                             },
                             "env": [{
-                                "name": "PGUSER",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "name": "${DATABASE_SERVICE_NAME}",
-                                        "key": "database-user"
+                                    "name": "NODE_ENV",
+                                    "value": "production"
+                                },
+                                {
+                                    "name": "PGUSER",
+                                    "valueFrom": {
+                                        "secretKeyRef": {
+                                            "name": "${DATABASE_SERVICE_NAME}",
+                                            "key": "database-user"
+                                        }
+                                    }
+                                }, {
+                                    "name": "PGPASSWORD",
+                                    "valueFrom": {
+                                        "secretKeyRef": {
+                                            "name": "${DATABASE_SERVICE_NAME}",
+                                            "key": "database-password"
+                                        }
+                                    }
+                                }, {
+                                    "name": "PGDATABASE",
+                                    "valueFrom": {
+                                        "secretKeyRef": {
+                                            "name": "${DATABASE_SERVICE_NAME}",
+                                            "key": "database-name"
+                                        }
                                     }
                                 }
-                            }, {
-                                "name": "PGPASSWORD",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "name": "${DATABASE_SERVICE_NAME}",
-                                        "key": "database-password"
-                                    }
-                                }
-                            }, {
-                                "name": "PGDATABASE",
-                                "valueFrom": {
-                                    "secretKeyRef": {
-                                        "name": "${DATABASE_SERVICE_NAME}",
-                                        "key": "database-name"
-                                    }
-                                }
-                            }],
+                            ],
                             "resources": {
                                 "limits": {
                                     "memory": "${APP_MEMORY_LIMIT}"
